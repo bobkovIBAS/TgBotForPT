@@ -4,19 +4,22 @@ all:
       ansible_user: ansible1
       ansible_ssh_pass: 123123
       ansible_host: 192.168.217.172
+      ansible_sudo_pass: 123123
 
     ansible2:
       ansible_user: ansible2
       ansible_ssh_pass: 123123
-      ansible_host: 192.168.217.177
+      ansible_host: 192.168.217.170
+      ansible_sudo_pass: 123123
 
     ansible3:
       ansible_user: ansible3
       ansible_ssh_pass: 123123
       ansible_host: 192.168.217.171
+      ansible_sudo_pass: 123123
 
   vars:
-    BOT_HOST: 192.168.217.177
+    BOT_HOST: 192.168.217.170
 
     DB_REPL_HOST: 192.168.217.172
     DB_REPL_USER: postgres
@@ -30,7 +33,7 @@ all:
     DB_DATABASE: contacts_db
 
     TOKEN: 7691121158:AAHPGAe3jvapmdrucR5QHzVECCZex-k5-yo
-    RM_HOST: 192.168.217.177
+    RM_HOST: 192.168.217.170
     RM_PORT: 22
     RM_USER: ansible2
     RM_PASSWORD: 123123
