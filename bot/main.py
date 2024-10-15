@@ -1,3 +1,4 @@
+import subprocess
 import logging
 import paramiko
 import psycopg2
@@ -25,6 +26,7 @@ GET_APT_LIST_CHOICE, GET_PACKAGE_NAME = range(2)
 SAVE_PHONE_NUMBER_STATE = 1
 SAVE_EMAIL_ADDRESS_STATE = 2
 
+LOG_FILE_PATH = "/var/log/postgresql/postgresql.log"
 
 logging.basicConfig(filename='bot.log', level=logging.INFO, format=' %(asctime)s - %(levelname)s - %(message)s', encoding="utf-8")
 logger = logging.getLogger(__name__)
@@ -390,22 +392,18 @@ def run_remote_command(command, host, username, password):
 
 def get_repl_logs(update: Update, context):
     try:
-        command = "cat /var/log/postgresql/postgresql-15-main.log | grep repl | tail -n 15"
-        remote_host = DB_HOST
-        remote_username = "bobkov"
-        remote_password = DB_PASSWORD
-
-        logs, error = run_remote_command(command, remote_host, remote_username, remote_password)
-
+        result = subprocess.run(
+            ["bash", "-c", f"cat {LOG_FILE_PATH} | grep repl | tail -n 15"],
+            capture_output=True,
+            text=True,
+        )
+        logs = result.stdout
         if logs:
             update.message.reply_text(f"Последние репликационные логи:\n{logs}")
-        elif error:
-            update.message.reply_text(f"Ошибка при получении логов: {error}")
         else:
             update.message.reply_text("Репликационные логи не найдены.")
-
     except Exception as e:
-        update.message.reply_text(f"Ошибка при выполнении команды для получения логов: {str(e)}")
+        update.message.reply_text(f"Ошибка при получении логов: {str(e)}")
 
 def get_emails(update: Update, context):
     try:
